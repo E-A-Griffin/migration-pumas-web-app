@@ -1,0 +1,280 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS (and SCSS, if configured) file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+/* class for empty divs */
+div.invisible {
+  display: none;
+}
+
+/* start map style */
+#map {
+  margin: auto;
+  display: flex;
+  flex-flow: column;
+  min-height: 90vh;
+}
+/* end map style */
+
+a {
+  outline: 0;
+}
+
+table {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2;}
+
+tr:hover {background-color: #ddd;}
+
+th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #04AA6D;
+  color: white;
+}
+
+.label-column {
+  float: left;
+  max-width: 10%;
+  min-width: 120px;
+  padding: 2px;
+}
+
+.select-column {
+  float: left;
+  max-width: 20%;
+  min-width: 270px;
+  padding: 2px;
+}
+
+.search-column {
+  float: left;
+  max-width: 4%;
+  min-width: 123px;
+  padding: 2px;
+}
+
+.download-column {
+  float: left;
+  max-width: 10%;
+  min-width: 110px;
+  padding: 2px;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+#cover {
+  display: none;
+}
+
+button:active, input:active {
+  transform: translate(0.5px,0.5px);
+}
+
+button, input {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: darkseagreen;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 12px;
+  padding: 2px;
+  width: 120px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 2px;
+}
+
+input:hover {
+  border: 1px solid black;
+}
+
+input:hover:after {
+  content: '\2193';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  transition: 0.5s;
+}
+
+button:disabled,
+button[disabled]{
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+a:disabled,
+a[disabled]{
+  pointer-events: none;
+}
+
+/* start utilities */
+.border-bottom-0 {
+  border-bottom: 0 !important;
+}
+/* end utilities */
+
+/* start tooltip */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  top: -11px;
+  left: 105%;
+  font-size: 12px;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent black transparent transparent;
+}
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+/* end tooltip */
+
+
+/* start toggle-animation-btn */
+button.toggle-animation-btn span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+button.toggle-animation-btn:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+/* end toggle-animation-btn */
+
+/* start search-btn */
+button.search-btn span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+
+button.search-btn span:after {
+  content: '\002315';
+  position: absolute;
+  font-size: 17px;
+  opacity: 0;
+  bottom: 0px;
+  transition: 0.5s;
+}
+
+button.search-btn:hover span {
+  padding-right: 15px;
+}
+
+button.search-btn:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+/* end search-btn */
+
+/* start download-btn */
+button.download-btn span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+button.download-btn span:after {
+  content: '\2193';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  transition: 0.5s;
+}
+
+button.download-btn:hover span {
+  padding-right: 15px;
+}
+
+button.download-btn:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+button.download-btn:hover span {
+  padding-right: 15px;
+}
+
+button.download-btn:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+/* end download-btn */
+
+/* dot */
+.dot {
+  margin:20px auto;
+  color: seagreen;
+  width:95px;
+  height:45px;
+  --d:radial-gradient(farthest-side,currentColor 90%,#0000);
+  background:var(--d),var(--d),var(--d),var(--d);
+  background-size:20px 20px;
+  background-repeat:no-repeat;
+  animation: m 1s infinite;
+  position: fixed;
+  top: 50%;
+  right: 50%;
+}
+
+@keyframes m {
+  0%  {background-position:calc(0*100%/3) 50%, calc(1*100%/3) 50% , calc(2*100%/3) 50%, calc(3*100%/3) 50% }
+  33% {background-position:calc(0*100%/3) 0  , calc(1*100%/3) 100%, calc(2*100%/3) 0  , calc(3*100%/3) 100%}
+  66% {background-position:calc(1*100%/3) 0  , calc(0*100%/3) 100%, calc(3*100%/3) 0  , calc(2*100%/3) 100%}
+  100%{background-position:calc(1*100%/3) 50%, calc(0*100%/3) 50% , calc(3*100%/3) 50%, calc(2*100%/3) 50% }
+}

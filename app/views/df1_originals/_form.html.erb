@@ -1,0 +1,27 @@
+<%= form_with(model: df1_original) do |form| %>
+  <% if df1_original.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(df1_original.errors.count, "error") %> prohibited this df1_original from being saved:</h2>
+
+      <ul>
+        <% df1_original.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :record_type, style: "display: block" %>
+    <%= form.text_area :record_type %>
+  </div>
+
+  <div>
+    <%= form.label :serial_no, style: "display: block" %>
+    <%= form.number_field :serial_no %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

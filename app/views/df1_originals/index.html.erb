@@ -1,0 +1,125 @@
+<%= javascript_include_tag "application" %>
+<%= javascript_include_tag "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" %>
+<!-- start leaflet -->
+<%= javascript_include_tag "https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" %>
+<%= javascript_include_tag "L.KML.js" %>
+<%= javascript_include_tag "https://unpkg.com/@tweenjs/tween.js@18.6.4/dist/tween.umd.js" %>
+<%= javascript_include_tag "Leaflet.Canvas-Flowmap-Layer-master/src/CanvasFlowmapLayer.js" %>
+<%= stylesheet_link_tag    "https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" %>
+<!-- end leaflet -->
+
+<div id="load-dot" class="dot"></div>
+<div id="cover">
+
+    <div class="search-column tooltip border-bottom-0">
+        <button id="animation-btn-id" class="toggle-animation-btn disabled"
+                type="button">
+            <span>Enable Animations</span>
+        </button>
+        <p id="toggle-animation-btn-tooltip" class="tooltiptext">
+            Animations Currently Disabled
+        </p>
+    </div>
+    <br>
+
+    <%= content_tag :div,
+     id: "kmls-arr-id",
+     class: "invisible",
+     data: {kmls:
+            Dir.glob("public/census-pumas/*.kml").map{|s| s.sub("public/", "")}} do %>
+    <% end %>
+    <p style="color: green"><%= notice %></p>
+
+
+
+    <%= form_with method: :get,
+          html: {id: "metro-search-id", autocomplete: "off"},
+          local: false do |form| %>
+          <div class="row">
+
+              <div class="label-column">
+                  <%= form.label "Origin" %>
+              </div>
+              <div class="select-column">
+                  <%= form.select :o_city, @metro.keys, :selected => params[:o_city],
+                   include_blank: 'Select origin city',
+                   disabled: 'Select origin city' %>
+              </div>
+          </div>
+          <div class="row">
+
+              <div class="label-column">
+                  <%= form.label "Destination" %>
+              </div>
+
+              <div class="select-column">
+                  <%= form.select :d_city, @metro.keys, selected: params[:d_city],
+                   include_blank: 'Select destination city' %>
+              </div>
+              <div class="search-column tooltip border-bottom-0">
+                  <button id="search-btn-id" class="search-btn" type="submit"
+                          name="commit" disabled="">
+                      <span>Search</span>
+                  </button>
+                  <p id="search-btn-tooltip" class="tooltiptext">
+                      Search disabled
+                  </p>
+              </div>
+
+          </div>
+      <% end %>
+
+      <div class="download-column tooltip border-bottom-0" id="download-col-id">
+          <%= link_to ("<button type='button' class='download-btn'" +
+                       (@df1_originals.first.is_a?(Df1Original) ?
+                        "disabled>" : "not-disabled>") +
+                       "<span>Download CSV</span></button>").html_safe,
+           df1_originals_path(format: "csv",
+                              :o_city => @query[:o_city],
+                              :d_city => @query[:d_city]),
+           :disabled => @df1_originals.first.is_a?(Df1Original) %>
+          <p id='download-btn-tooltip' class='tooltiptext'>
+              Download <%= @df1_originals.first.is_a?(Df1Original) ?
+                       "disabled" : "" %>
+          </p>
+      </div>
+
+      <div id="map"></div>
+
+      <!-- Only show results if a search has been performed -->
+      <% if !@df1_originals.first.is_a? Df1Original %>
+          <div id="results-hash", class="invisible">
+              <%= @df1_originals.to_json %>
+          </div>
+          <div class="invisible">
+              <table id="results-table">
+                  <tr>
+                      <% @df1_originals.first.keys.each do |col| %>
+                          <th><%= col %></th>
+                      <% end %>
+                  </tr>
+                  <% @df1_originals.each do |row| %>
+                      <tr>
+                          <% row.each do |k, v| %>
+
+                              <td><%= v %></td>
+                          <% end %>
+                      </tr>
+                  <% end %>
+              </table>
+          </div>
+      <% end %>
+
+      <% if false %>
+          <div id="df1_originals">
+              <% @df1_originals.each do |df1_original| %>
+                  <%= render df1_original %>
+                  <p>
+                      <%= link_to "Show this df1 original", df1_original %>
+                  </p>
+              <% end %>
+          </div>
+          <%= link_to "New df1 original", new_df1_original_path %>
+      <% end %>
+  </div>
+</div>
