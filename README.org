@@ -1,0 +1,13 @@
+# README
+  Ruby on Rails web application that utilizes Leaflet JS on the front end to visualize queries on a database of migration PUMAs data.
+ 
+* Ruby version
+ruby 3.0.3p157 (2021-11-24 revision 3fb7d2cadc) [x86_64-linux]
+
+* System dependencies
+
+* Configuration
+
+* Database creation
+
+* Database initialization
