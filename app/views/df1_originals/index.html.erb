@@ -11,15 +11,16 @@
 <div id="load-dot" class="dot"></div>
 <div id="cover">
 
-    <div class="search-column tooltip border-bottom-0">
-        <button id="animation-btn-id" class="toggle-animation-btn disabled"
-                type="button">
-            <span>Enable Animations</span>
-        </button>
-        <p id="toggle-animation-btn-tooltip" class="tooltiptext">
-            Animations Currently Disabled
-        </p>
+    <div class="search-column border-bottom-0">
+        <label class="toggle">
+          <input id="animation-btn-id" type="checkbox">
+          <span class="slider-round"></span>
+          <span class="labels" data-on="Animations on"
+                data-off="Animations off"></span>
+          </input>
+        </label>
     </div>
+    <br>
     <br>
 
     <%= content_tag :div,
@@ -30,44 +31,100 @@
     <% end %>
     <p style="color: green"><%= notice %></p>
 
-
-
     <%= form_with method: :get,
-          html: {id: "metro-search-id", autocomplete: "off"},
-          local: false do |form| %>
-          <div class="row">
+                  html: {id: "metro-search-id", autocomplete: "off",
+                         action: "/df1_originals"},
+                  local: true,
+                  remote: false do |form| %>
+        <!-- start year dropdown selector -->
+        <div class="row">
+            <div class="label-column">
+                <%= form.label "Start Year" %>
+            </div>
+            <div class="select-column">
+                <%= form.select :start_year, @years,
+                    :selected => params[:start_year] %>
+            </div>
+        </div>
+        <!-- end year dropdown selector -->
+        <div class="row">
+            <div class="label-column">
+                <%= form.label "End Year" %>
+            </div>
+            <div class="select-column">
+                <%= form.select :end_year, @years,
+                 :selected => @years.last %>
+            </div>
+        </div>
+        <!-- k for top k outflows -->
+        <div class="row">
+            <div class="label-column">
+                <%= form.label "Top K Outflows" %>
+            </div>
+            <div class="select-column">
+                <%= form.number_field :k,
+                 :min => 1,
+                 :oninput => "this.value = this.value > 0 ? this.value : 1",
+                 :value => 10,
+                 :class => "dropdown-search" %>
+            </div>
+        </div>
+        <!-- origin city search/filter dropdown selector -->
+        <div class="row">
+            <div class="label-column">
+                <%= form.label "Origin" %>
+            </div>
+            <div class="select-column">
+                <div class="dropdown">
+                    <input class="dropdown-search"
+                           id="dropdown-origin-search-id"
+                           type="text"
+                           placeholder="Search Cities"
+                           selected=""
+                           name="o_city">
+                    <div id="dropdown-origin-div-id"
+                         class="dropdown-content">
+                        <% @all_cities.keys.each do |k| %>
+                            <a><%= k %></a>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-              <div class="label-column">
-                  <%= form.label "Origin" %>
-              </div>
-              <div class="select-column">
-                  <%= form.select :o_city, @metro.keys, :selected => params[:o_city],
-                   include_blank: 'Select origin city',
-                   disabled: 'Select origin city' %>
-              </div>
-          </div>
-          <div class="row">
+        <!-- destination city search/filter dropdown selector -->
+        <div class="row">
+            <div class="label-column">
+                <%= form.label "Destination" %>
+            </div>
+            <div class="select-column">
+                <div class="dropdown">
+                    <input class="dropdown-search"
+                           id="dropdown-destination-search-id"
+                           type="text"
+                           placeholder="Search Cities"
+                           selected=""
+                           name="d_city">
+                    <div id="dropdown-destination-div-id"
+                         class="dropdown-content">
+                        <% @all_cities.keys.each do |k| %>
+                            <a><%= k %></a>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+            <div class="search-column tooltip border-bottom-0">
+                <button id="search-btn-id" class="search-btn" type="submit"
+                        name="commit" disabled="" remote="false">
+                    <span>Search</span>
+                </button>
+                <p id="search-btn-tooltip" class="tooltiptext">
+                    Search disabled
+                </p>
+            </div>
 
-              <div class="label-column">
-                  <%= form.label "Destination" %>
-              </div>
-
-              <div class="select-column">
-                  <%= form.select :d_city, @metro.keys, selected: params[:d_city],
-                   include_blank: 'Select destination city' %>
-              </div>
-              <div class="search-column tooltip border-bottom-0">
-                  <button id="search-btn-id" class="search-btn" type="submit"
-                          name="commit" disabled="">
-                      <span>Search</span>
-                  </button>
-                  <p id="search-btn-tooltip" class="tooltiptext">
-                      Search disabled
-                  </p>
-              </div>
-
-          </div>
-      <% end %>
+        </div>
+    <% end %>
 
       <div class="download-column tooltip border-bottom-0" id="download-col-id">
           <%= link_to ("<button type='button' class='download-btn'" +
@@ -75,6 +132,7 @@
                         "disabled>" : "not-disabled>") +
                        "<span>Download CSV</span></button>").html_safe,
            df1_originals_path(format: "csv",
+                              :year   => @query[:year],
                               :o_city => @query[:o_city],
                               :d_city => @query[:d_city]),
            :disabled => @df1_originals.first.is_a?(Df1Original) %>
