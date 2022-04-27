@@ -33,6 +33,26 @@ const update_disabled = (o_city_selected, d_city_selected) => {
                                    ' disabled'));
 }
 
+let dwnld_col  = document.getElementById("download-col-id");
+let dwnld_link = dwnld_col.firstElementChild;
+let dwnld_btn  = dwnld_link.firstElementChild;
+
+// Updates whether download button is enabled or disabled based on current
+// connections drawn
+const update_disabled_download = (map_state) => {
+    if (connections_exist(map_state)) {
+        dwnld_link.removeAttribute('disabled');
+        dwnld_btn.removeAttribute('disabled');
+    }
+    else {
+        dwnld_link.addAttribute('disabled', true);
+        dwnld_btn.addAttribute('disabled', true);
+    }
+}
+
+// True iff there exists at least one connection currently drawn on map
+const connections_exist = (map_state) => map_state['connections'].length > 0
+
 // True iff search column has a (non-default) value selected
 const is_city_selected = (search_var, comp) =>
     $(search_var).find(':selected').text() != comp;
@@ -56,6 +76,14 @@ const toggle_animations_button = (btn) => {
         console.log("Error toggling animations, wrong checkbox format");
 }
 
+let append_btn = $('#append-btn-id')[0];
+
+// True iff (checkbox) input is currently checked
+const is_input_checked = (element) => element.checked;
+
+// True iff append button is currently on/checked
+const is_append_on = partial(is_input_checked, append_btn);
+
 // Takes in a string of a form_id and returns the values of the respective form
 // matching form_id, represented as a string of query parameters
 const form_vals_to_q_params = (form_id) => {
@@ -72,6 +100,14 @@ const draw_new_conns = async (json, are_animations_on) => {
     const results_arr = get_deduped_arr(json);
     const subset_arr = results_arr.slice(0,10);
     const subset_len = subset_arr.length;
+
+    if (!is_append_on()) {
+        console.log("append off");
+        console.log(map_state);
+        reset_connections(map_state);
+    }
+    else
+        console.log("append on");
     subset_arr.map((arr, index) => {
         console.log([arr['destination-state'],
                      arr['destination-puma'],
@@ -86,12 +122,22 @@ const draw_new_conns = async (json, are_animations_on) => {
                                 arr['original-puma']));
             if (are_animations_on)
                 turn_animations_on(map_state);
+            if (index == subset_len-1) {
+                console.log("update_disabled_download called");
+                console.log("connections:");
+                console.log(map_state['connections'])
+                update_disabled_download(map_state);
+            }
+
         }, 50 + index*2);}); // arbitrary increasing delay rate to keep web app
                              // from crashing
 }
 
-// Takes in a set of expec
+// Takes in a set of expected keys and returns true iff the set conforms to
+// schema
 const has_schema = (schema_keys_set, json_element) => {
+    if (json_element === null || json_element === undefined)
+        return false;
     const ks = Object.keys(json_element);
     return ks.length === schema_keys_set.size &&
            !ks.map((k) => schema_keys_set.has(k)).some((bool) => !bool);}
@@ -119,7 +165,6 @@ const fetch_search_results = async (e) => {
           }
           // Case 2: o_city->d_city flow
           else {
-              console.log(json);
               draw_new_conns(json, animations_button.checked);}});
 }
 
@@ -128,7 +173,6 @@ $('#metro-search-id').submit(fetch_search_results);
 
 // Workaround for issue of including download button in rails generated form
 let metro_form = document.getElementById("metro-search-id");
-let dwnld_col  = document.getElementById("download-col-id");
 
 if (metro_form)
     metro_form.lastElementChild.appendChild(dwnld_col);

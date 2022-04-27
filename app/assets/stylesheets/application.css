@@ -145,6 +145,10 @@ a[disabled]{
 .border-bottom-0 {
   border-bottom: 0 !important;
 }
+
+.round-checkbox {
+  margin-right: 60px;
+}
 /* end utilities */
 
 /* start tooltip */
@@ -202,8 +206,8 @@ button.toggle-animation-btn:hover span:after {
 /* start animations-checkbox */
 
 .toggle {
-  --width: 70px;
-  --height: calc(var(--width) / 3);
+  --width: 123px;
+  --height: calc(var(--width) / 5);
 
   position: relative;
   display: inline-block;
@@ -222,9 +226,9 @@ button.toggle-animation-btn:hover span:after {
 
 .toggle .labels {
   position: absolute;
-  top: 12px;
+  top: 14px;
   left: 40px;
-  width: 115%;
+  width: 192%;
   height: 100%;
   color: #4d4d4d;
   font-size: 12px;
@@ -288,7 +292,7 @@ button.toggle-animation-btn:hover span:after {
   height: 26px;
   width: 26px;
   left: 4px;
-  bottom: 3px;
+  bottom: 4px;
   background-color: lightgray;
   -webkit-transition: .4s;
   transition: all .4s ease-in-out;

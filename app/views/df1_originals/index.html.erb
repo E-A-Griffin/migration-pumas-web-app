@@ -11,12 +11,21 @@
 <div id="load-dot" class="dot"></div>
 <div id="cover">
 
-    <div class="search-column border-bottom-0">
+    <div class="search-column border-bottom-0 round-checkbox">
         <label class="toggle">
           <input id="animation-btn-id" type="checkbox">
           <span class="slider-round"></span>
           <span class="labels" data-on="Animations on"
                 data-off="Animations off"></span>
+          </input>
+        </label>
+    </div>
+    <div class="search-column border-bottom-0 round-checkbox">
+        <label class="toggle">
+          <input id="append-btn-id" type="checkbox" checked>
+          <span class="slider-round"></span>
+          <span class="labels" data-on="Append new connections"
+                data-off="Reset connections"></span>
           </input>
         </label>
     </div>
@@ -128,14 +137,13 @@
 
       <div class="download-column tooltip border-bottom-0" id="download-col-id">
           <%= link_to ("<button type='button' class='download-btn'" +
-                       (@df1_originals.first.is_a?(Df1Original) ?
-                        "disabled>" : "not-disabled>") +
+                       "disabled>" +
                        "<span>Download CSV</span></button>").html_safe,
            df1_originals_path(format: "csv",
                               :year   => @query[:year],
                               :o_city => @query[:o_city],
                               :d_city => @query[:d_city]),
-           :disabled => @df1_originals.first.is_a?(Df1Original) %>
+           :disabled => 'true' %>
           <p id='download-btn-tooltip' class='tooltiptext'>
               Download <%= @df1_originals.first.is_a?(Df1Original) ?
                        "disabled" : "" %>
@@ -143,41 +151,5 @@
       </div>
 
       <div id="map"></div>
-
-      <!-- Only show results if a search has been performed -->
-      <% if !@df1_originals.first.is_a? Df1Original %>
-          <div id="results-hash", class="invisible">
-              <%= @df1_originals.to_json %>
-          </div>
-          <div class="invisible">
-              <table id="results-table">
-                  <tr>
-                      <% @df1_originals.first.keys.each do |col| %>
-                          <th><%= col %></th>
-                      <% end %>
-                  </tr>
-                  <% @df1_originals.each do |row| %>
-                      <tr>
-                          <% row.each do |k, v| %>
-
-                              <td><%= v %></td>
-                          <% end %>
-                      </tr>
-                  <% end %>
-              </table>
-          </div>
-      <% end %>
-
-      <% if false %>
-          <div id="df1_originals">
-              <% @df1_originals.each do |df1_original| %>
-                  <%= render df1_original %>
-                  <p>
-                      <%= link_to "Show this df1 original", df1_original %>
-                  </p>
-              <% end %>
-          </div>
-          <%= link_to "New df1 original", new_df1_original_path %>
-      <% end %>
   </div>
 </div>

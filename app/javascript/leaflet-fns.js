@@ -378,3 +378,10 @@ const start_leaflet = async (map_state) => {
     map_state['tracks'] = tracks;
     return Promise.all(promises);
 }
+
+// Remove all existing connections from map_state
+const reset_connections = (map_state) => {
+    let connections = map_state['connections'];
+    connections.forEach((conn) => map_state['map'].removeLayer(conn));
+    map_state['connections'] = [];
+}

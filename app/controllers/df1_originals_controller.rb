@@ -84,7 +84,9 @@ module City
    order by sum(person_weight) desc
    limit ?;"
 
-  @@CITY_SQL_YEAR_CLAUSE = " and substr(serial_no, 1, 4) = ?;"
+  @@CITY_SQL_YEAR_CLAUSE = " and substr(serial_no, 1, 4)::int between ? and ? "
+
+  @@CITY_SQL_K_OUTFLOWS = "limit ?;"
 
   def is_number? string
     true if Integer(string) rescue false
@@ -120,15 +122,10 @@ module City
                       @@METRO_SQL_ORIGIN_PREFIX : @@CITY_SQL_ORIGIN_PREFIX
       d_city_prefix = is_number?(d_city_name_or_code) ?
                       @@METRO_SQL_DEST_PREFIX : @@CITY_SQL_DEST_PREFIX
-      if (Df1Original.year?(year))
-        suffix = @@CITY_SQL_SUFFIX + @@CITY_SQL_YEAR_CLAUSE
-        [o_city_prefix + d_city_prefix + suffix, o_city_name_or_code,
-         d_city_name_or_code, year]
-      else
-        suffix = @@CITY_SQL_SUFFIX + ";"
-        [o_city_prefix + d_city_prefix + suffix, o_city_name_or_code,
-         d_city_name_or_code]
-      end
+      suffix = @@CITY_SQL_SUFFIX + @@CITY_SQL_YEAR_CLAUSE +
+               @@CITY_SQL_K_OUTFLOWS
+      [o_city_prefix + d_city_prefix + suffix, o_city_name_or_code,
+       d_city_name_or_code, start_year.to_i, end_year.to_i, k.to_i]
     end
   end
 end
@@ -137,10 +134,11 @@ class Df1OriginalsController < ApplicationController
   before_action :set_df1_original, only: %i[ show edit update destroy ]
   include City
 
-  # GET /df1_originals or /df1_originals.json
+  @@session_results = []
+
+  # GET /df1_originals, /df1_originals.json, or /df1_originals.csv
   def index
     @query = params
-    # params[:year] is optional, so don't check for it until forming SQL
     if params[:o_city] and params[:k] and params[:start_year] and
        params[:end_year]
       clean_sql =
@@ -150,9 +148,15 @@ class Df1OriginalsController < ApplicationController
       record_results = ActiveRecord::Base.connection.execute(clean_sql)
 
       @df1_originals = record_results
-    else
-      # Get only three element so computer doesn't crash
-      @df1_originals = Df1Original.take(3)
+      @@session_results.append(record_results)
+      @@session_results.each do |res|
+        puts(res.class)
+        puts(res.as_json)
+      end
+    # Reset connections on refresh
+    elsif request.format == 'text/html'
+      @@session_results = []
+      @df1_originals = [nil]
     end
     @all_cities = Df1Original.get_all_cities
     @years = Df1Original.get_years
@@ -167,6 +171,15 @@ class Df1OriginalsController < ApplicationController
           records.each do |row|
             csv << row.values_at(*attributes)
           end
+        # Should be default case, array of ActiveRecords
+        elsif records.first.class == PG::Result
+          attributes = records.first.first.keys
+          csv << attributes
+          records.each do |record|
+            record.each do |row|
+              csv << row.values_at(*attributes)
+            end
+          end
         else
           attributes = records.first.attributes.keys
           csv << attributes
@@ -179,7 +192,7 @@ class Df1OriginalsController < ApplicationController
     }
     respond_to do |format|
       format.html
-      format.csv { send_data to_csv.call(record_results),
+      format.csv { send_data to_csv.call(@@session_results),
                              :filename =>
                              (@query.key?(:o_city) and
                               @query.key?(:d_city) ?
