@@ -8,6 +8,5 @@ ruby 3.0.3p157 (2021-11-24 revision 3fb7d2cadc) [x86_64-linux]
 
 * Configuration
 
-* Database creation
-
-* Database initialization
+* Database creation & initialization
+Refer to the guide in https://github.com/E-A-Griffin/migration-pumas-database
