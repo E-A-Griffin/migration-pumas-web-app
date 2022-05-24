@@ -28,7 +28,10 @@
 /public/assets
 
 # This is temporarily needed in order for repository to be usable
-/public/*
+/public/ipums_puma_2010.kml
+/public/merged-kmls/*
+/public/kmls/*
+/public/census-pumas/xmls/*
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
