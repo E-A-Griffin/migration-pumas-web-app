@@ -3,9 +3,9 @@
 
 * Contents
 - [[#ruby-version][Ruby version]]
-- [[#system_dependencies][System dependencies]]
-- [[#installation+configuration][Installation & configuration]]
-- [[#database_creation+initialization][Database creation & initialization]]
+- [[#system-dependencies][System dependencies]]
+- [[#installation--configuration][Installation & configuration]]
+- [[#database-creation--initialization][Database creation & initialization]]
 
 * Ruby version
 :PROPERTIES:
@@ -15,12 +15,12 @@ ruby 3.0.3p157 (2021-11-24 revision 3fb7d2cadc) [x86_64-linux]
 
 * System dependencies
 :PROPERTIES:
-:CUSTOM_ID: system_dependencies
+:CUSTOM_ID: system-dependencies
 :END:
 
 * Installation & Configuration
 :PROPERTIES:
-:CUSTOM_ID: installation+configuration
+:CUSTOM_ID: installation--configuration
 :END:
 First, install the necessary dependencies with ~bundle install~.
 
@@ -52,6 +52,6 @@ development:
 The underlying database necessary for the web application's backend to fetch information from needs to be created for the application to run. [[#database_creation+initialization][Database creation & initialization]] provides a link to the associated repository needed to setup the database.
 * Database creation & initialization
 :PROPERTIES:
-:CUSTOM_ID: database_creation+initialization
+:CUSTOM_ID: database-creation--initialization
 :END:
 Refer to the guide in https://github.com/E-A-Griffin/migration-pumas-database
