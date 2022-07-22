@@ -48,13 +48,11 @@ const json_to_csv = ((json) => {
 });
 
 let dwnld_col  = document.getElementById("download-col-id");
-//let dwnld_link = dwnld_col.firstElementChild;
 let dwnld_btn  = dwnld_col.firstElementChild;
 
 const download_csv = () => {
   const json_csv = json_to_csv(JSON.parse($('#sql-res').attr('data-sql')));
  
-  console.log('called'); 
   let hidden_e = document.createElement('a');
   hidden_e.href = 'data:text/csv;charset=utf-8,' + encodeURI(json_csv);
   hidden_e.target = '_blank';
@@ -68,14 +66,10 @@ console.log("download_csv fn added: " + dwnld_btn);
 // Updates whether download button is enabled or disabled based on current
 // connections drawn
 const update_disabled_download = (map_state) => {
-    if (connections_exist(map_state)) {
-        //dwnld_link.removeAttribute('disabled');
+    if (connections_exist(map_state))
         dwnld_btn.removeAttribute('disabled');
-    }
-    else {
-        //dwnld_link.addAttribute('disabled', true);
+    else 
         dwnld_btn.addAttribute('disabled', true);
-    }
 }
 
 // True iff there exists at least one connection currently drawn on map
@@ -129,13 +123,8 @@ const draw_new_conns = async (json, are_animations_on) => {
     const subset_arr = results_arr.slice(0,10);
     const subset_len = subset_arr.length;
 
-    if (!is_append_on()) {
-        console.log("append off");
-        console.log(map_state);
+    if (!is_append_on())
         reset_connections(map_state);
-    }
-    else
-        console.log("append on");
     subset_arr.map((arr, index) => {
         console.log([arr['destination-state'],
                      arr['destination-puma'],
@@ -150,13 +139,8 @@ const draw_new_conns = async (json, are_animations_on) => {
                                 arr['original-puma']));
             if (are_animations_on)
                 turn_animations_on(map_state);
-            if (index == subset_len-1) {
-                console.log("update_disabled_download called");
-                console.log("connections:");
-                console.log(map_state['connections'])
+            if (index == subset_len-1)
                 update_disabled_download(map_state);
-            }
-
         }, 50 + index*2);}); // arbitrary increasing delay rate to keep web app
                              // from crashing
 }
@@ -186,14 +170,11 @@ const fetch_search_results = async (e) => {
     }).then((response) => response.json())
       .then((json) => {
           let animations_button = $('#animation-btn-id')[0];
-	  console.log("json: ");
-          console.log(json);
 	  // Preserve intermediate results
 	  // Check if new connections are to be appended or reset
 	  const sql_arr = ($('#append-btn-id').is(':checked') ?
 			   JSON.parse($('#sql-res').attr('data-sql')) : [])
 	                   .concat(json);
-	  console.log('sql_arr = ' + JSON.stringify(sql_arr));
 	  $('#sql-res').attr('data-sql', JSON.stringify(sql_arr));
 	  draw_new_conns(json, animations_button.checked);
 	});
@@ -226,7 +207,6 @@ const async_init_leaflet = async (map_state) => {
 const filter_end_years = (start_year_select, end_year_select) => {
     const start_year = parseInt(start_year_select.value);
     let options = end_year_select.getElementsByTagName("option");
-    console.log("options " + options);
     Array.from(options).forEach((op) => {
         if (parseInt(op.value) < start_year)
             op.setAttribute("disabled", "");
@@ -272,7 +252,6 @@ if (results_html) {
                                        arr['original-state'],
                                        arr['original-puma'])),
                    50 + index*2);});
-    console.log(map_state);
 }
 
 
@@ -284,16 +263,16 @@ let dropdown_destination_search = $("#dropdown-destination-search-id")[0];
 // When the user clicks on the button,
 // toggle between hiding and showing the dropdown content */
 const toggle_search_fields_visibility = (dropdown_div) =>
-        dropdown_div.classList.add("show");
+  dropdown_div.classList.add("show");
 
 // Dynamically filter dropdown list based on input value
 const filter_search_fields = (dropdown_search, dropdown_div) => {
-    const filter = dropdown_search.value.toUpperCase();
-    let a = dropdown_div.getElementsByTagName("a");
-    Array.from(a).forEach((e) => {
-        const txt_val = e.txtContent || e.innerText;
-        e.style.display =
-            txt_val.toUpperCase().indexOf(filter) > -1 ? "" : "none";});
+  const filter = dropdown_search.value.toUpperCase();
+  let a = dropdown_div.getElementsByTagName("a");
+  Array.from(a).forEach((e) => {
+      const txt_val = e.txtContent || e.innerText;
+      e.style.display =
+          txt_val.toUpperCase().indexOf(filter) > -1 ? "" : "none";});
 }
 
 // When the user clicks outside the input, remove visibility for the associated
@@ -322,7 +301,6 @@ dropdown_destination_search.addEventListener('keyup',
 // From clicked a tag, set associated parent's input value and 'selected'
 // attribute
 const set_select_based_on_a_tag = (a, e) => {
-    console.log('click');
     let content = a.txtContent || a.innerText;
     let relevant_parent =
         e.target.parentElement.parentElement.firstElementChild;
