@@ -14,6 +14,10 @@
  *= require_self
  */
 
+body {
+  font-family: Helvetica;
+}
+
 /* class for empty divs */
 div.invisible {
   display: none;
@@ -231,7 +235,7 @@ button.toggle-animation-btn:hover span:after {
   width: 192%;
   height: 100%;
   color: #4d4d4d;
-  font-size: 12px;
+  font-size: 10.7px;
   font-family: sans-serif;
   transition: all 0.4s ease-in-out;
 }
