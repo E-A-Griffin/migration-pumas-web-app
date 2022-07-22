@@ -56,7 +56,7 @@ const download_csv = () => {
   let hidden_e = document.createElement('a');
   hidden_e.href = 'data:text/csv;charset=utf-8,' + encodeURI(json_csv);
   hidden_e.target = '_blank';
-  hidden_e.download = 'test.csv';
+  hidden_e.download = 'output.csv';
   hidden_e.click();
 }
 
