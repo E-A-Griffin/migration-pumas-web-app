@@ -1,12 +1,57 @@
 # README
   Ruby on Rails web application that utilizes Leaflet JS on the front end to visualize queries on a database of migration PUMAs data.
- 
+
+* Contents
+- [[#ruby-version][Ruby version]]
+- [[#system-dependencies][System dependencies]]
+- [[#installation--configuration][Installation & configuration]]
+- [[#database-creation--initialization][Database creation & initialization]]
+
 * Ruby version
+:PROPERTIES:
+:CUSTOM_ID: ruby-version
+:END:
 ruby 3.0.3p157 (2021-11-24 revision 3fb7d2cadc) [x86_64-linux]
 
 * System dependencies
+:PROPERTIES:
+:CUSTOM_ID: system-dependencies
+:END:
 
-* Configuration
+* Installation & Configuration
+:PROPERTIES:
+:CUSTOM_ID: installation--configuration
+:END:
+First, install the necessary dependencies with ~bundle install~.
 
+Next, be sure to reconfigure the settings to have your username and password set in ~config/database.yml~:
+#+BEGIN_SRC yaml
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  # For details on connection pooling, see Rails configuration guide
+  # https://guides.rubyonrails.org/configuring.html#database-pooling
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: db_user # !!!Change this to your db username!!!
+  password: <%= ENV["MIGRATION_DB_DATABASE_PASSWORD"] %> # !!!You may also need to change this!!!
+
+development:
+  <<: *default
+  database: pumsdb
+
+  # The specified database role being used to connect to postgres.
+  # To create additional roles in postgres see `$ createuser --help`.
+  # When left blank, postgres will use the default role. This is
+  # the same name as the operating system user running Rails.
+  username: db_user # !!!Change this to your db username!!!
+
+  # The password associated with the postgres role (username).
+  password: <%= ENV["MIGRATION_DB_DATABASE_PASSWORD"] %> # !!!You may also need to change this!!!
+#+END_SRC
+
+The underlying database necessary for the web application's backend to fetch information from needs to be created for the application to run. [[#database_creation+initialization][Database creation & initialization]] provides a link to the associated repository needed to setup the database.
 * Database creation & initialization
+:PROPERTIES:
+:CUSTOM_ID: database-creation--initialization
+:END:
 Refer to the guide in https://github.com/E-A-Griffin/migration-pumas-database
