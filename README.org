@@ -3,9 +3,10 @@
 
 [[./app/assets/images/sample-img.png]]
 
+Currently supports searching "top k" outflows based on a range of specified years given an origin metropolitan area and possibly a destination metropolitan area. Also supports downloading results to a CSV file.
+
 * Contents
 - [[#ruby-version][Ruby version]]
-- [[#system-dependencies][System dependencies]]
 - [[#installation--configuration][Installation & configuration]]
 - [[#database-creation--initialization][Database creation & initialization]]
 
@@ -14,11 +15,6 @@
 :CUSTOM_ID: ruby-version
 :END:
 ruby 3.0.3p157 (2021-11-24 revision 3fb7d2cadc) [x86_64-linux]
-
-* System dependencies
-:PROPERTIES:
-:CUSTOM_ID: system-dependencies
-:END:
 
 * Installation & Configuration
 :PROPERTIES:
