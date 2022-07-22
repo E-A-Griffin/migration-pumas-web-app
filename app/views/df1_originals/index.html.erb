@@ -38,6 +38,14 @@
      data: {kmls:
             Dir.glob("public/census-pumas/*.kml").map{|s| s.sub("public/", "")}} do %>
     <% end %>
+
+    <%= content_tag :div,
+     id: "sql-res",
+     class: "invisible",
+     data: {sql:
+	    []} do %>
+    <% end %>
+
     <p style="color: green"><%= notice %></p>
 
     <%= form_with method: :get,
@@ -136,18 +144,13 @@
     <% end %>
 
       <div class="download-column tooltip border-bottom-0" id="download-col-id">
-          <%= link_to ("<button type='button' class='download-btn'" +
-                       "disabled>" +
-                       "<span>Download CSV</span></button>").html_safe,
-           df1_originals_path(format: "csv",
-                              :year   => @query[:year],
-                              :o_city => @query[:o_city],
-                              :d_city => @query[:d_city]),
-           :disabled => 'true' %>
-          <p id='download-btn-tooltip' class='tooltiptext'>
-              Download <%= @df1_originals.first.is_a?(Df1Original) ?
-                       "disabled" : "" %>
-          </p>
+        <button type="button" class="download-btn" disabled>
+          <span>Download CSV</span>
+	</button>
+        <p id='download-btn-tooltip' class='tooltiptext'>
+           Download <%= @df1_originals.first.is_a?(Df1Original) ?
+                     "disabled" : "" %>
+        </p>
       </div>
 
       <div id="map"></div>

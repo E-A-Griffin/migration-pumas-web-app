@@ -33,19 +33,47 @@ const update_disabled = (o_city_selected, d_city_selected) => {
                                    ' disabled'));
 }
 
+// Credit, source code taken from Christian Landgren: 
+// https://stackoverflow.com/questions/8847766/how-to-convert-json-to-csv-format-and-store-in-a-variable
+const json_to_csv = ((json) => {
+  const replacer = (k, v) => v === null ? '' : v // specify how you want to handle null values here
+  const header = Object.keys(json[0])
+  const csv = [
+    header.join(','), // header row first
+    json.map(row => header.map(fieldName => 
+			       JSON.stringify(row[fieldName], replacer)).join(',')).join('\n')
+  ].join('\n')
+  
+  return csv;
+});
+
 let dwnld_col  = document.getElementById("download-col-id");
-let dwnld_link = dwnld_col.firstElementChild;
-let dwnld_btn  = dwnld_link.firstElementChild;
+//let dwnld_link = dwnld_col.firstElementChild;
+let dwnld_btn  = dwnld_col.firstElementChild;
+
+const download_csv = () => {
+  const json_csv = json_to_csv(JSON.parse($('#sql-res').attr('data-sql')));
+ 
+  console.log('called'); 
+  let hidden_e = document.createElement('a');
+  hidden_e.href = 'data:text/csv;charset=utf-8,' + encodeURI(json_csv);
+  hidden_e.target = '_blank';
+  hidden_e.download = 'test.csv';
+  hidden_e.click();
+}
+
+dwnld_btn.addEventListener("click", download_csv);
+console.log("download_csv fn added: " + dwnld_btn);
 
 // Updates whether download button is enabled or disabled based on current
 // connections drawn
 const update_disabled_download = (map_state) => {
     if (connections_exist(map_state)) {
-        dwnld_link.removeAttribute('disabled');
+        //dwnld_link.removeAttribute('disabled');
         dwnld_btn.removeAttribute('disabled');
     }
     else {
-        dwnld_link.addAttribute('disabled', true);
+        //dwnld_link.addAttribute('disabled', true);
         dwnld_btn.addAttribute('disabled', true);
     }
 }
@@ -158,14 +186,17 @@ const fetch_search_results = async (e) => {
     }).then((response) => response.json())
       .then((json) => {
           let animations_button = $('#animation-btn-id')[0];
-          // Case 1: Top k outflows
-          if (has_outflow_schema(json[0])) {
-              console.log(json);
-              draw_new_conns(json, animations_button.checked);
-          }
-          // Case 2: o_city->d_city flow
-          else {
-              draw_new_conns(json, animations_button.checked);}});
+	  console.log("json: ");
+          console.log(json);
+	  // Preserve intermediate results
+	  // Check if new connections are to be appended or reset
+	  const sql_arr = ($('#append-btn-id').is(':checked') ?
+			   JSON.parse($('#sql-res').attr('data-sql')) : [])
+	                   .concat(json);
+	  console.log('sql_arr = ' + JSON.stringify(sql_arr));
+	  $('#sql-res').attr('data-sql', JSON.stringify(sql_arr));
+	  draw_new_conns(json, animations_button.checked);
+	});
 }
 
 $('#animation-btn-id')[0].addEventListener("change", toggle_animations_button);

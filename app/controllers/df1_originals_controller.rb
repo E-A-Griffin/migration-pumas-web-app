@@ -134,8 +134,6 @@ class Df1OriginalsController < ApplicationController
   before_action :set_df1_original, only: %i[ show edit update destroy ]
   include City
 
-  @@session_results = []
-
   # GET /df1_originals, /df1_originals.json, or /df1_originals.csv
   def index
     # TODO: Debug commented code below for allowing dynamic database information
@@ -162,63 +160,15 @@ class Df1OriginalsController < ApplicationController
       record_results = ActiveRecord::Base.connection.execute(clean_sql)
 
       @df1_originals = record_results
-      @@session_results.append(record_results)
-      @@session_results.each do |res|
-        puts(res.class)
-        puts(res.as_json)
-      end
     # Reset connections on refresh
     elsif request.format == 'text/html'
-      @@session_results = []
       @df1_originals = [nil]
     end
     @all_cities = Df1Original.get_all_cities
     @years = Df1Original.get_years
 
-    # Lambda function to process csv based on attributes of SQL results
-    to_csv = -> (records) {
-      CSV.generate(headers: true) do |csv|
-        if records.first.is_a? Hash
-          attributes = records.first.keys
-          csv << attributes
-
-          records.each do |row|
-            csv << row.values_at(*attributes)
-          end
-        # Should be default case, array of ActiveRecords
-        elsif records.first.class == PG::Result
-          attributes = records.first.first.keys
-          csv << attributes
-          records.each do |record|
-            record.each do |row|
-              csv << row.values_at(*attributes)
-            end
-          end
-        else
-          attributes = records.first.attributes.keys
-          csv << attributes
-
-          records.each do |row|
-            csv << row.attributes.values_at(*attributes)
-          end
-        end
-      end
-    }
     respond_to do |format|
       format.html
-      format.csv { send_data to_csv.call(@@session_results),
-                             :filename =>
-                             (@query.key?(:o_city) and
-                              @query.key?(:d_city) ?
-                              'from-' +
-                              @query[:o_city].tr(' ', '_') +
-                              '-to-' +
-                              @query[:d_city].tr(' ', '_') +
-                              (@query[:year].empty? ? '' :
-                                                      '-' + @query[:year]) +
-                              '.csv' :
-                              'df1_originals.csv')
-      }
       format.json { render json: @df1_originals }
     end
   end

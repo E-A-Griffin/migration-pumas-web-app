@@ -959,7 +959,7 @@ class Df1Original < ApplicationRecord
   self.table_name = 'df1_original'
   self.primary_key = 'serial_no'
   # Distinct years in database
-  @@YEARS = Df1Original.distinct.pluck(Arel.sql("substr(serial_no, 1, 4)"))
+  @@YEARS = Df1Original.distinct.pluck(Arel.sql("substr(serial_no, 1, 4)")).sort
   @@YEAR_LENGTH = 4
 
   def self.get_years
