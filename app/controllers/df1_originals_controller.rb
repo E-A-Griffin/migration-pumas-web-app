@@ -138,6 +138,20 @@ class Df1OriginalsController < ApplicationController
 
   # GET /df1_originals, /df1_originals.json, or /df1_originals.csv
   def index
+    # TODO: Debug commented code below for allowing dynamic database information
+    # puts ActiveRecord::Base.connection_db_config.as_json
+    # get_pass = -> {pass = STDIN.noecho(&:gets).chop
+		   # pass == "nil"? nil : pass}
+    # Attempt to change connection dynamically
+    # ActiveRecord::Base.establish_connection(
+     #  "adapter"  => "postgresql",
+     #  "encoding" => "unicode",
+     #  "username" => (puts "Enter username: "; gets.chop),
+     #  "password" => (puts "Enter password: ('nil' for no password)"; get_pass.call()),
+     #  "database" => (puts "Enter database: "; gets.chop),
+     #  "host"     => "localhost",
+     #  "port"     => 5432
+    # )
     @query = params
     if params[:o_city] and params[:k] and params[:start_year] and
        params[:end_year]
