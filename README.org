@@ -48,6 +48,8 @@ development:
 #+END_SRC
 
 The underlying database necessary for the web application's backend to fetch information from needs to be created for the application to run. [[#database_creation+initialization][Database creation & initialization]] provides a link to the associated repository needed to setup the database.
+
+Once the database is setup, the server may be started locally via ~bin/rails server~. By default the server hosts on ~127.0.0.1~ port 3000.
 * Database creation & initialization
 :PROPERTIES:
 :CUSTOM_ID: database-creation--initialization
